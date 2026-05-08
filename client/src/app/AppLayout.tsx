@@ -75,7 +75,7 @@ export const AppLayout = () => {
               border: 1,
               borderColor: 'divider',
               position: { md: 'sticky' },
-              top: { md: 80 },
+              top: { md: 48 },
               minWidth: 0,
               overflow: 'hidden',
             }}
