@@ -8,7 +8,7 @@ Define tags with typed inputs, cross-reference them with autocomplete, and copy 
 
 [![Live Demo](https://img.shields.io/badge/demo-promptly-6E56CF?style=for-the-badge&logo=githubpages&logoColor=white)](https://jathavaan.github.io/promptly/)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/jathavaan/promptly/deploy.yml?branch=main&style=for-the-badge&label=deploy)](https://github.com/jathavaan/promptly/actions/workflows/deploy.yml)
-[![License: MIT](https://img.shields.io/github/license/jathavaan/promptly?style=for-the-badge)](./LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue?style=for-the-badge)](./LICENSE)
 
 </div>
 
@@ -74,4 +74,4 @@ Live at **<https://jathavaan.github.io/promptly/>**.
 
 ## License
 
-[MIT](./LICENSE) © [Jathavaan Shankar](https://github.com/jathavaan)
+[GNU GPL v3](./LICENSE) © [Jathavaan Shankar](https://github.com/jathavaan)
