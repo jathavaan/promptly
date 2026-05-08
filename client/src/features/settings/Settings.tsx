@@ -61,7 +61,7 @@ export const Settings = () => {
           <Typography variant="caption" color="text.secondary">
             Role priming
           </Typography>
-          <Tooltip title="Single-line role for the model. Rendered as <role> at the top of the prompt.">
+          <Tooltip title="Role for the model. Rendered as <role> at the top of the prompt.">
             <IconButton size="small">
               <HelpOutlineIcon fontSize="inherit" />
             </IconButton>
@@ -70,6 +70,8 @@ export const Settings = () => {
         <TextField
           size="small"
           fullWidth
+          multiline
+          minRows={1}
           placeholder="You are a senior Python developer specializing in async I/O."
           value={settings.role}
           onChange={(e) => dispatch(settingsActions.setRole(e.target.value))}
