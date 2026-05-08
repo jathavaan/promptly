@@ -6,7 +6,7 @@
 
 Define tags with typed inputs, cross-reference them with autocomplete, and copy a clean rendered prompt in one click.
 
-[![Live Demo](https://img.shields.io/badge/demo-promptly-6E56CF?style=for-the-badge&logo=githubpages&logoColor=white)](https://jathavaan.github.io/promptly/)
+[![Try it now](https://img.shields.io/badge/try%20it%20now-promptly-6E56CF?style=for-the-badge&logo=githubpages&logoColor=white)](https://jathavaan.github.io/promptly/)
 [![Deploy](https://img.shields.io/github/actions/workflow/status/jathavaan/promptly/deploy.yml?branch=main&style=for-the-badge&label=deploy)](https://github.com/jathavaan/promptly/actions/workflows/deploy.yml)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL%20v3-blue?style=for-the-badge)](./LICENSE)
 
