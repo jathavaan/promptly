@@ -6,6 +6,7 @@ import type { LibraryState } from '@/features/library/types';
 
 const KEY_DRAFT = 'promptly:draft';
 const KEY_LIBRARY = 'promptly:library';
+const KEY_TUTORIAL = 'promptly:tutorial-seen';
 const DEBOUNCE_MS = 300;
 
 interface DraftSnapshot {
@@ -171,6 +172,17 @@ export const persistenceMiddleware: Middleware<object, PersistedShape> = (store)
         /* ignore */
       }
     }, DEBOUNCE_MS);
+  }
+
+  if (type.startsWith('tutorial/')) {
+    try {
+      const state = store.getState() as { tutorial?: { seen?: boolean } };
+      if (state.tutorial?.seen) {
+        localStorage.setItem(KEY_TUTORIAL, '1');
+      }
+    } catch {
+      /* ignore */
+    }
   }
 
   return result;

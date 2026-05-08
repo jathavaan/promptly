@@ -37,7 +37,13 @@ export const PreviewActions = ({ xml, disabled }: PreviewActionsProps) => {
 
   return (
     <>
-      <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        useFlexGap
+        sx={{ flexWrap: 'wrap' }}
+        data-tutorial="preview-actions"
+      >
         <Button
           variant="contained"
           size="small"

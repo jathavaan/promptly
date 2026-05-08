@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { tagsActions, tagsReducer } from '@/features/tags/tagsSlice';
 import { settingsActions, settingsReducer } from '@/features/settings/settingsSlice';
 import { libraryActions, libraryReducer } from '@/features/library/librarySlice';
+import { tutorialReducer } from '@/features/tutorial/tutorialSlice';
 import { loadDraft, loadLibrary, persistenceMiddleware } from './persistence';
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     tags: tagsReducer,
     settings: settingsReducer,
     library: libraryReducer,
+    tutorial: tutorialReducer,
   },
   middleware: (getDefault) => getDefault().concat(persistenceMiddleware),
 });

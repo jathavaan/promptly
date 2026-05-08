@@ -84,7 +84,10 @@ export const Tags = () => {
           )}
         </>
       )}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+      <Box
+        sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}
+        data-tutorial="add-controls"
+      >
         <PresetMenu />
         <Button
           variant="contained"

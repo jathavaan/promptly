@@ -11,21 +11,30 @@ import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { Tags } from '@/features/tags/Tags';
 import { Settings } from '@/features/settings/Settings';
 import { Preview } from '@/features/preview/Preview';
 import { Library } from '@/features/library/Library';
+import { Tutorial } from '@/features/tutorial/Tutorial';
+import { tutorialActions } from '@/features/tutorial/tutorialSlice';
+import { useAppDispatch } from '@/app/hooks';
 import { useTagValidation } from '@/features/tags/hooks/useTagValidation';
 
 export const AppLayout = () => {
   const [libraryOpen, setLibraryOpen] = useState(false);
   const v = useTagValidation();
+  const dispatch = useAppDispatch();
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <AppBar position="sticky" color="default" elevation={0} sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Toolbar variant="dense">
-          <Typography variant="h1" sx={{ flexGrow: 1, fontSize: '1.125rem' }}>
+          <Typography
+            variant="h1"
+            sx={{ flexGrow: 1, fontSize: '1.125rem' }}
+            data-tutorial="app-title"
+          >
             promptly
           </Typography>
           {v.totalErrors + v.totalWarnings > 0 && (
@@ -34,8 +43,21 @@ export const AppLayout = () => {
               {v.totalWarnings === 1 ? '' : 's'}
             </Typography>
           )}
+          <Tooltip title="Tutorial">
+            <IconButton
+              onClick={() => dispatch(tutorialActions.start())}
+              aria-label="Open tutorial"
+              data-tutorial="tutorial-button"
+            >
+              <SchoolOutlinedIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Library">
-            <IconButton onClick={() => setLibraryOpen(true)} aria-label="Open library">
+            <IconButton
+              onClick={() => setLibraryOpen(true)}
+              aria-label="Open library"
+              data-tutorial="library-button"
+            >
               <BookmarksOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -62,10 +84,16 @@ export const AppLayout = () => {
           }}
         >
           <Stack spacing={2} sx={{ minWidth: 0 }}>
-            <Paper sx={{ p: 2, border: 1, borderColor: 'divider' }}>
+            <Paper
+              sx={{ p: 2, border: 1, borderColor: 'divider' }}
+              data-tutorial="settings-panel"
+            >
               <Settings />
             </Paper>
-            <Paper sx={{ p: 2, border: 1, borderColor: 'divider' }}>
+            <Paper
+              sx={{ p: 2, border: 1, borderColor: 'divider' }}
+              data-tutorial="tags-panel"
+            >
               <Tags />
             </Paper>
           </Stack>
@@ -79,6 +107,7 @@ export const AppLayout = () => {
               minWidth: 0,
               overflow: 'hidden',
             }}
+            data-tutorial="preview-panel"
           >
             <Preview />
           </Paper>
@@ -91,6 +120,7 @@ export const AppLayout = () => {
         </Typography>
       </Box>
       <Library open={libraryOpen} onClose={() => setLibraryOpen(false)} />
+      <Tutorial />
     </Box>
   );
 };
