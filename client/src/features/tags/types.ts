@@ -27,6 +27,7 @@ export interface Tag {
   exampleValue: ExampleItem[];
   pinned: boolean;
   disabled: boolean;
+  static: boolean;
   notes: string;
 }
 

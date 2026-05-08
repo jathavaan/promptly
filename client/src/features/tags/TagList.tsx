@@ -28,10 +28,12 @@ const CENTER_THRESHOLD = 0.45; // center 90% of the row counts as "drop on"
 
 export const TagList = ({ parentUuid }: TagListProps) => {
   const dispatch = useAppDispatch();
-  const order = useAppSelector((s) =>
+  const rawOrder = useAppSelector((s) =>
     parentUuid === null ? s.tags.rootOrder : (s.tags.childOrder[parentUuid] ?? []),
   );
   const byUuid = useAppSelector((s) => s.tags.byUuid);
+  const showStatic = useAppSelector((s) => s.settings.showStaticInBuilder);
+  const order = showStatic ? rawOrder : rawOrder.filter((u) => !byUuid[u]?.static);
   const validation = useTagValidation();
   const [groupTarget, setGroupTarget] = useState<string | null>(null);
   const sensors = useSensors(
@@ -68,8 +70,8 @@ export const TagList = ({ parentUuid }: TagListProps) => {
       dispatch(tagsActions.mergeIntoGroup({ activeUuid: activeId, targetUuid: overId }));
       return;
     }
-    const from = order.indexOf(activeId);
-    const to = order.indexOf(overId);
+    const from = rawOrder.indexOf(activeId);
+    const to = rawOrder.indexOf(overId);
     if (from < 0 || to < 0) return;
     dispatch(tagsActions.reorderWithinParent({ parentUuid, from, to }));
   };

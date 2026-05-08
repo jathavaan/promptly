@@ -28,6 +28,7 @@ const blankTag = (
   exampleValue: [{ uuid: nanoid(), input: '', output: '' }],
   pinned: false,
   disabled: false,
+  static: false,
   notes: '',
 });
 
@@ -182,7 +183,7 @@ const tagsSlice = createSlice({
       state,
       action: PayloadAction<{
         uuid: string;
-        flag: 'pinned' | 'disabled';
+        flag: 'pinned' | 'disabled' | 'static';
         value: boolean;
       }>,
     ) {

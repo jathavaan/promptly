@@ -24,30 +24,11 @@ import type { LibraryKind, PromptlyFile, SavedItem } from './types';
 import type { Tag } from '@/features/tags/types';
 import { nanoid } from 'nanoid';
 
+
 interface LibraryProps {
   open: boolean;
   onClose: () => void;
 }
-
-const stripValuesForTemplate = (file: PromptlyFile): PromptlyFile => ({
-  ...file,
-  tags: {
-    ...file.tags,
-    byUuid: Object.fromEntries(
-      Object.entries(file.tags.byUuid).map(([uuid, t]) => [
-        uuid,
-        {
-          ...t,
-          textValue: '',
-          checkboxValue: false,
-          listValue: t.listValue.map((i) => ({ ...i, text: '', checked: false })),
-          exampleValue: t.exampleValue.map((e) => ({ ...e, input: '', output: '' })),
-        },
-      ]),
-    ),
-  },
-  settings: { ...file.settings, role: '' },
-});
 
 const cloneWithFreshUuids = (file: PromptlyFile): PromptlyFile => {
   const idMap = new Map<string, string>();
@@ -107,8 +88,7 @@ export const Library = ({ open, onClose }: LibraryProps) => {
   const handleSave = () => {
     if (!name.trim()) return;
     const payload: PromptlyFile = { version: 1, tags, settings };
-    const finalPayload = kind === 'template' ? stripValuesForTemplate(payload) : payload;
-    dispatch(libraryActions.save({ name: name.trim(), kind, payload: finalPayload }));
+    dispatch(libraryActions.save({ name: name.trim(), kind, payload }));
     setName('');
   };
 

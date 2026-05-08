@@ -28,6 +28,7 @@ const metaAttrs = (tag: Tag): string => {
   const parts: string[] = [`p:type="${tag.type}"`];
   if (tag.pinned) parts.push('p:pinned="true"');
   if (tag.disabled) parts.push('p:disabled="true"');
+  if (tag.static) parts.push('p:static="true"');
   if (tag.notes) parts.push(`p:notes="${xmlEscapeAttr(tag.notes)}"`);
   if (tag.type === 'list') {
     if (tag.listStyle && tag.listStyle !== 'unordered') {

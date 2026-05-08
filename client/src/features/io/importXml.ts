@@ -32,6 +32,7 @@ const blankTag = (id: string, type: InputType, parentUuid: string | null = null)
   exampleValue: [{ uuid: nanoid(), input: '', output: '' }],
   pinned: false,
   disabled: false,
+  static: false,
   notes: '',
 });
 
@@ -139,6 +140,7 @@ const parseTag = (el: Element, parentUuid: string | null, ctx: ParseContext): Ta
   const tag = blankTag(id, type, parentUuid);
   tag.pinned = attrPromptly(el, 'pinned') === 'true';
   tag.disabled = attrPromptly(el, 'disabled') === 'true';
+  tag.static = attrPromptly(el, 'static') === 'true';
   tag.notes = attrPromptly(el, 'notes') ?? '';
 
   switch (type) {
@@ -221,6 +223,7 @@ export const importPromptlyXml = (xmlText: string): ImportResult => {
     thinkStepByStep: false,
     selfCritique: false,
     copyMode: 'raw',
+    showStaticInBuilder: false,
   };
   const copyModeAttr = attrPromptly(root, 'copyMode');
   if (copyModeAttr === 'raw' || copyModeAttr === 'markdown') {

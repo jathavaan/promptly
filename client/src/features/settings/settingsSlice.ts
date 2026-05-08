@@ -7,6 +7,7 @@ export interface SettingsState {
   thinkStepByStep: boolean;
   selfCritique: boolean;
   copyMode: CopyMode;
+  showStaticInBuilder: boolean;
 }
 
 const initialState: SettingsState = {
@@ -14,6 +15,7 @@ const initialState: SettingsState = {
   thinkStepByStep: false,
   selfCritique: false,
   copyMode: 'raw',
+  showStaticInBuilder: false,
 };
 
 const settingsSlice = createSlice({
@@ -31,6 +33,9 @@ const settingsSlice = createSlice({
     },
     setCopyMode(state, action: PayloadAction<CopyMode>) {
       state.copyMode = action.payload;
+    },
+    setShowStaticInBuilder(state, action: PayloadAction<boolean>) {
+      state.showStaticInBuilder = action.payload;
     },
     replaceAll(_state, action: PayloadAction<SettingsState>) {
       return action.payload;

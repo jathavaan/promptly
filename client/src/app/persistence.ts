@@ -69,6 +69,7 @@ const migrateTag = (raw: Record<string, unknown>): Tag => {
         : [{ uuid: nanoid(), input: '', output: '' }],
     pinned: Boolean(t.pinned),
     disabled: Boolean(t.disabled),
+    static: Boolean(t.static),
     notes: t.notes ?? '',
   };
 };
@@ -106,9 +107,14 @@ export const loadDraft = (): DraftSnapshot | null => {
     const parsed = JSON.parse(raw) as { tags?: Record<string, unknown>; settings?: SettingsState };
     return {
       tags: parsed.tags ? migrateTagsState(parsed.tags) : { byUuid: {}, rootOrder: [], childOrder: {} },
-      settings:
-        parsed.settings ??
-        ({ role: '', thinkStepByStep: false, selfCritique: false, copyMode: 'raw' } as SettingsState),
+      settings: {
+        role: '',
+        thinkStepByStep: false,
+        selfCritique: false,
+        copyMode: 'raw',
+        showStaticInBuilder: false,
+        ...(parsed.settings ?? {}),
+      } as SettingsState,
     };
   } catch {
     return null;

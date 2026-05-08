@@ -21,6 +21,8 @@ import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlined';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import AddIcon from '@mui/icons-material/Add';
@@ -152,6 +154,30 @@ export const TagItem = ({ tag, issues, isGroupTarget }: TagItemProps) => {
               <VisibilityOffOutlinedIcon fontSize="small" />
             ) : (
               <VisibilityOutlinedIcon fontSize="small" />
+            )}
+          </IconButton>
+        </Tooltip>
+        <Tooltip
+          title={
+            tag.static
+              ? 'Static — hidden from builder, kept in output'
+              : 'Mark as static (hide from builder)'
+          }
+        >
+          <IconButton
+            size="small"
+            color={tag.static ? 'secondary' : 'default'}
+            onClick={() =>
+              dispatch(
+                tagsActions.setFlag({ uuid: tag.uuid, flag: 'static', value: !tag.static }),
+              )
+            }
+            aria-label="Toggle static"
+          >
+            {tag.static ? (
+              <LockOutlinedIcon fontSize="small" />
+            ) : (
+              <LockOpenOutlinedIcon fontSize="small" />
             )}
           </IconButton>
         </Tooltip>
