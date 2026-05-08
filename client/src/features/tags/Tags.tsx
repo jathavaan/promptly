@@ -15,20 +15,9 @@ export const Tags = () => {
 
   return (
     <Stack spacing={1.5}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-        <Typography variant="h2" sx={{ flexGrow: 1 }}>
-          Tags{total > 0 ? ` (${total})` : ''}
-        </Typography>
-        <PresetMenu />
-        <Button
-          variant="contained"
-          size="small"
-          startIcon={<AddIcon />}
-          onClick={() => dispatch(tagsActions.addPresetTag({ id: 'tag', type: 'text' }))}
-        >
-          Add tag
-        </Button>
-      </Box>
+      <Typography variant="h2">
+        Tags{total > 0 ? ` (${total})` : ''}
+      </Typography>
       {total === 0 ? (
         <Stack spacing={1}>
           <Typography variant="body2" color="text.secondary">
@@ -49,6 +38,17 @@ export const Tags = () => {
       ) : (
         <TagList parentUuid={null} />
       )}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+        <PresetMenu />
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<AddIcon />}
+          onClick={() => dispatch(tagsActions.addPresetTag({ id: 'tag', type: 'text' }))}
+        >
+          Add tag
+        </Button>
+      </Box>
     </Stack>
   );
 };
