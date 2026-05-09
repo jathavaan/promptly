@@ -4,21 +4,6 @@ title: "[Bug]: "
 labels: ["bug", "needs-triage"]
 assignees: ["jathavaan"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to file a bug report. Please fill out the sections below so the issue can be reproduced quickly.
-
-  - type: checkboxes
-    id: prereqs
-    attributes:
-      label: Prerequisites
-      options:
-        - label: I searched existing issues and did not find a duplicate.
-          required: true
-        - label: I am using the latest version deployed at the project URL (or `main`).
-          required: true
-
   - type: textarea
     id: summary
     attributes:
@@ -32,7 +17,6 @@ body:
     id: repro
     attributes:
       label: Steps to reproduce
-      description: Numbered list. Be specific.
       value: |
         1.
         2.
@@ -64,17 +48,9 @@ body:
         - Safari
         - Edge
         - Brave
-        - Other (specify in additional context)
+        - Other
     validations:
       required: true
-
-  - type: input
-    id: browser-version
-    attributes:
-      label: Browser version
-      placeholder: e.g. 124.0.6367.91
-    validations:
-      required: false
 
   - type: dropdown
     id: os
@@ -86,7 +62,7 @@ body:
         - Linux
         - iOS
         - Android
-        - Other (specify in additional context)
+        - Other
     validations:
       required: true
 
@@ -94,23 +70,6 @@ body:
     id: screenshots
     attributes:
       label: Screenshots or recording
-      description: Drag and drop images or video. Optional but very helpful.
-    validations:
-      required: false
-
-  - type: textarea
-    id: console
-    attributes:
-      label: Console errors
-      description: Paste any errors from the browser devtools console.
-      render: shell
-    validations:
-      required: false
-
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Anything else relevant — related issues, recent changes, workarounds tried.
+      description: Optional but helpful.
     validations:
       required: false
