@@ -18,6 +18,17 @@ Define tags with typed inputs, cross-reference them with autocomplete, and copy 
 
 Hand-writing `<role>...</role>` and `<context>...</context>` blocks for Claude or ChatGPT prompts gets repetitive. **promptly** turns prompt scaffolding into a typed, reusable form: define tags once, fill them in, copy the result.
 
+### Why XML tags?
+
+Modern LLMs — Claude in particular — parse XML-tagged prompts more reliably than free-form text. Wrapping each section in its own tag lets the model unambiguously separate role, data, instructions, and examples, and lets you reference one section from another without paraphrasing.
+
+> "XML tags help Claude parse complex prompts unambiguously, especially when your prompt mixes instructions, context, examples, and variable inputs. Wrapping each type of content in its own tag (e.g. `<instructions>`, `<context>`, `<input>`) reduces misinterpretation."
+> — Anthropic, [*Prompt engineering — Structure prompts with XML tags*](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)
+
+The same idea shows up in general prompt-engineering advice: using clear delimiters between instruction and context measurably improves output, with XML tags being the most legible option for nested structure ([Prompt Engineering Guide — *General tips for designing prompts*](https://www.promptingguide.ai/introduction/tips)).
+
+promptly bakes this practice into the editor: every field is a tag, every tag has a typed input, and the rendered output is well-formed XML you can copy or round-trip via Import / Export.
+
 ## Table of contents
 
 - [Quickstart](#quickstart)
