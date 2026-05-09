@@ -2,8 +2,6 @@
 
 <img src="client/public/promptly-logo.svg" alt="promptly" width="320" />
 
-# promptly
-
 **Build structured LLM prompts wrapped in HTML tags.**
 
 Define tags with typed inputs, cross-reference them with autocomplete, and copy a clean rendered prompt in one click.
