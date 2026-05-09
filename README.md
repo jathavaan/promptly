@@ -1,8 +1,10 @@
 <div align="center">
 
+<img src="client/public/favicon.svg" alt="promptly logo" width="96" height="96" />
+
 # promptly
 
-**Build structured LLM prompts wrapped in HTML tags — fast.**
+**Build structured LLM prompts wrapped in HTML tags.**
 
 Define tags with typed inputs, cross-reference them with autocomplete, and copy a clean rendered prompt in one click.
 

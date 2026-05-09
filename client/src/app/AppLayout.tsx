@@ -29,6 +29,13 @@ export const AppLayout = () => {
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <AppBar position="sticky" color="default" elevation={0} sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Toolbar variant="dense">
+          <Box
+            component="img"
+            src={`${import.meta.env.BASE_URL}favicon.svg`}
+            alt=""
+            aria-hidden="true"
+            sx={{ width: 24, height: 24, mr: 1, display: 'block' }}
+          />
           <Typography
             variant="h1"
             sx={{ flexGrow: 1, fontSize: '1.125rem' }}
