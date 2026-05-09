@@ -11,6 +11,11 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Chip from '@mui/material/Chip';
 import Alert from '@mui/material/Alert';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -85,6 +90,7 @@ export const Library = ({ open, onClose }: LibraryProps) => {
 
   const [name, setName] = useState('');
   const [kind, setKind] = useState<LibraryKind>('prompt');
+  const [pendingDelete, setPendingDelete] = useState<SavedItem | null>(null);
 
   const trimmed = name.trim();
   const nameTaken =
@@ -102,6 +108,12 @@ export const Library = ({ open, onClose }: LibraryProps) => {
     dispatch(tagsActions.replaceAll(fresh.tags));
     dispatch(globalsActions.replaceAll(fresh.globals));
     onClose();
+  };
+
+  const confirmDelete = () => {
+    if (!pendingDelete) return;
+    dispatch(libraryActions.remove(pendingDelete.uuid));
+    setPendingDelete(null);
   };
 
   return (
@@ -201,7 +213,7 @@ export const Library = ({ open, onClose }: LibraryProps) => {
                   <IconButton
                     size="small"
                     color="error"
-                    onClick={() => dispatch(libraryActions.remove(it.uuid))}
+                    onClick={() => setPendingDelete(it)}
                   >
                     <DeleteOutlineIcon fontSize="small" />
                   </IconButton>
@@ -211,6 +223,21 @@ export const Library = ({ open, onClose }: LibraryProps) => {
           ))}
         </Stack>
       </Box>
+      <Dialog open={Boolean(pendingDelete)} onClose={() => setPendingDelete(null)}>
+        <DialogTitle>Delete {pendingDelete?.kind}?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            &ldquo;{pendingDelete?.name}&rdquo; will be removed from your library.
+            This cannot be undone — export it first if you want to keep a copy.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPendingDelete(null)}>Cancel</Button>
+          <Button variant="contained" color="error" onClick={confirmDelete}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Drawer>
   );
 };
