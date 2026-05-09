@@ -1,26 +1,33 @@
+import { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { Button } from '@/components/Button/Button';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { tagsActions } from './tagsSlice';
-import { settingsActions } from '@/features/settings/settingsSlice';
+import { globalsActions } from '@/features/globals/globalsSlice';
 import { TagList } from './TagList';
 import { PresetMenu } from './PresetMenu';
 
 export const Tags = () => {
   const dispatch = useAppDispatch();
+  const [splitAnchor, setSplitAnchor] = useState<HTMLElement | null>(null);
   const total = useAppSelector((s) => Object.keys(s.tags.byUuid).length);
   const staticCount = useAppSelector(
     (s) => Object.values(s.tags.byUuid).filter((t) => t.static).length,
   );
-  const showStatic = useAppSelector((s) => s.settings.showStaticInBuilder);
+  const showStatic = useAppSelector((s) => s.globals.showStaticInBuilder);
   const visibleRootCount = useAppSelector((s) =>
     showStatic
       ? s.tags.rootOrder.length
@@ -45,7 +52,7 @@ export const Tags = () => {
             <IconButton
               size="small"
               color={showStatic ? 'secondary' : 'default'}
-              onClick={() => dispatch(settingsActions.setShowStaticInBuilder(!showStatic))}
+              onClick={() => dispatch(globalsActions.setShowStaticInBuilder(!showStatic))}
               aria-label="Toggle static field visibility"
             >
               {showStatic ? (
@@ -89,14 +96,48 @@ export const Tags = () => {
         data-tutorial="add-controls"
       >
         <PresetMenu />
-        <Button
-          variant="contained"
-          size="small"
-          startIcon={<AddIcon />}
-          onClick={() => dispatch(tagsActions.addPresetTag({ id: 'tag', type: 'text' }))}
+        <ButtonGroup variant="contained" size="small">
+          <Button
+            startIcon={<AddIcon />}
+            onClick={() => dispatch(tagsActions.addPresetTag({ id: 'tag', type: 'text' }))}
+          >
+            Add tag
+          </Button>
+          <Button
+            size="small"
+            aria-label="More add options"
+            aria-haspopup="menu"
+            aria-expanded={Boolean(splitAnchor)}
+            onClick={(e) => setSplitAnchor(e.currentTarget)}
+            sx={{ px: 0.5, minWidth: 32 }}
+          >
+            <ArrowDropDownIcon fontSize="small" />
+          </Button>
+        </ButtonGroup>
+        <Menu
+          anchorEl={splitAnchor}
+          open={Boolean(splitAnchor)}
+          onClose={() => setSplitAnchor(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          Add tag
-        </Button>
+          <MenuItem
+            onClick={() => {
+              dispatch(tagsActions.addPresetTag({ id: 'tag', type: 'text' }));
+              setSplitAnchor(null);
+            }}
+          >
+            <ListItemText primary="Add tag" secondary="Single field" />
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              dispatch(tagsActions.addPresetTag({ id: 'group', type: 'group' }));
+              setSplitAnchor(null);
+            }}
+          >
+            <ListItemText primary="Add group" secondary="Container for nested tags" />
+          </MenuItem>
+        </Menu>
       </Box>
     </Stack>
   );

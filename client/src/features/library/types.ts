@@ -1,4 +1,4 @@
-import type { SettingsState } from '@/features/settings/settingsSlice';
+import type { GlobalsState } from '@/features/globals/globalsSlice';
 import type { TagsState } from '@/features/tags/types';
 
 export type LibraryKind = 'prompt' | 'template';
@@ -6,7 +6,7 @@ export type LibraryKind = 'prompt' | 'template';
 export interface PromptlyFile {
   version: 1;
   tags: TagsState;
-  settings: SettingsState;
+  globals: GlobalsState;
 }
 
 export interface SavedItem {

@@ -1,13 +1,13 @@
 import type { PromptlyFile } from '@/features/library/types';
-import type { SettingsState } from '@/features/settings/settingsSlice';
+import type { GlobalsState } from '@/features/globals/globalsSlice';
 import type { TagsState } from '@/features/tags/types';
 import { renderPrompt } from '@/features/preview/render';
 
-export const buildPromptlyFile = (tags: TagsState, settings: SettingsState): PromptlyFile => ({
+export const buildPromptlyFile = (tags: TagsState, globals: GlobalsState): PromptlyFile => ({
   version: 1,
   tags,
-  settings,
+  globals,
 });
 
-export const exportPromptlyXml = (tags: TagsState, settings: SettingsState): string =>
-  renderPrompt({ tags, settings }, 'promptly');
+export const exportPromptlyXml = (tags: TagsState, globals: GlobalsState): string =>
+  renderPrompt({ tags, globals }, 'promptly');

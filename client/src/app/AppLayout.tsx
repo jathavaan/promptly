@@ -13,7 +13,7 @@ import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { Tags } from '@/features/tags/Tags';
-import { Settings } from '@/features/settings/Settings';
+import { Globals } from '@/features/globals/Globals';
 import { Preview } from '@/features/preview/Preview';
 import { Library } from '@/features/library/Library';
 import { Tutorial } from '@/features/tutorial/Tutorial';
@@ -86,9 +86,9 @@ export const AppLayout = () => {
           <Stack spacing={2} sx={{ minWidth: 0 }}>
             <Paper
               sx={{ p: 2, border: 1, borderColor: 'divider' }}
-              data-tutorial="settings-panel"
+              data-tutorial="globals-panel"
             >
-              <Settings />
+              <Globals />
             </Paper>
             <Paper
               sx={{ p: 2, border: 1, borderColor: 'divider' }}

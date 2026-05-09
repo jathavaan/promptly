@@ -6,9 +6,9 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     body: 'Build XML-tagged prompts for Claude, ChatGPT, and other LLMs. This quick tour walks through the main features. Use Next/Back, or press Esc to skip.',
   },
   {
-    targetId: 'settings-panel',
-    title: 'Settings',
-    body: 'Set the role primer (rendered as <role> at the top of the prompt), append "think step by step" or self-critique instructions, and pick an output-format template.',
+    targetId: 'globals-panel',
+    title: 'Globals',
+    body: 'Prompt-wide defaults. Set the role primer (rendered as <role> at the top of the prompt) and append "think step by step" or a self-critique instruction.',
     placement: 'right',
   },
   {

@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export type CopyMode = 'raw' | 'markdown';
 
-export interface SettingsState {
+export interface GlobalsState {
   role: string;
   thinkStepByStep: boolean;
   selfCritique: boolean;
@@ -10,7 +10,7 @@ export interface SettingsState {
   showStaticInBuilder: boolean;
 }
 
-const initialState: SettingsState = {
+const initialState: GlobalsState = {
   role: '',
   thinkStepByStep: false,
   selfCritique: false,
@@ -18,8 +18,8 @@ const initialState: SettingsState = {
   showStaticInBuilder: false,
 };
 
-const settingsSlice = createSlice({
-  name: 'settings',
+const globalsSlice = createSlice({
+  name: 'globals',
   initialState,
   reducers: {
     setRole(state, action: PayloadAction<string>) {
@@ -37,7 +37,7 @@ const settingsSlice = createSlice({
     setShowStaticInBuilder(state, action: PayloadAction<boolean>) {
       state.showStaticInBuilder = action.payload;
     },
-    replaceAll(_state, action: PayloadAction<SettingsState>) {
+    replaceAll(_state, action: PayloadAction<GlobalsState>) {
       return action.payload;
     },
     reset() {
@@ -46,5 +46,5 @@ const settingsSlice = createSlice({
   },
 });
 
-export const settingsActions = settingsSlice.actions;
-export const settingsReducer = settingsSlice.reducer;
+export const globalsActions = globalsSlice.actions;
+export const globalsReducer = globalsSlice.reducer;

@@ -8,13 +8,13 @@ import type {
   TagsState,
 } from '@/features/tags/types';
 import { REF_REGEX } from '@/features/tags/types';
-import type { SettingsState, CopyMode } from '@/features/settings/settingsSlice';
+import type { GlobalsState, CopyMode } from '@/features/globals/globalsSlice';
 
 const NS = 'urn:promptly';
 
 export interface ImportResult {
   tags: TagsState;
-  settings: SettingsState;
+  globals: GlobalsState;
 }
 
 export class ImportError extends Error {}
@@ -57,10 +57,10 @@ const directTextOnly = (el: Element): string => {
 const SELF_CRITIQUE_TEXT =
   'After your answer, critique it. List 3 things that might be wrong, weak, or missing.';
 
-const SETTINGS_LOCAL = new Set(['role', 'directive', 'critique']);
+const GLOBALS_LOCAL = new Set(['role', 'directive', 'critique']);
 
-const isSettingsEl = (el: Element): boolean =>
-  el.namespaceURI === NS && SETTINGS_LOCAL.has(el.localName);
+const isGlobalsEl = (el: Element): boolean =>
+  el.namespaceURI === NS && GLOBALS_LOCAL.has(el.localName);
 
 const inferType = (el: Element): InputType => {
   const kids = elementChildren(el);
@@ -218,7 +218,7 @@ export const importPromptlyXml = (xmlText: string): ImportResult => {
     throw new ImportError('Root element must be <prompt>.');
   }
 
-  const settings: SettingsState = {
+  const globals: GlobalsState = {
     role: '',
     thinkStepByStep: false,
     selfCritique: false,
@@ -227,7 +227,7 @@ export const importPromptlyXml = (xmlText: string): ImportResult => {
   };
   const copyModeAttr = attrPromptly(root, 'copyMode');
   if (copyModeAttr === 'raw' || copyModeAttr === 'markdown') {
-    settings.copyMode = copyModeAttr as CopyMode;
+    globals.copyMode = copyModeAttr as CopyMode;
   }
 
   const ctx: ParseContext = { byUuid: {}, childOrder: {}, rootOrder: [] };
@@ -237,30 +237,30 @@ export const importPromptlyXml = (xmlText: string): ImportResult => {
       isPromptlyEl(child, 'role') ||
       (child.localName === 'role' && !attrPromptly(child, 'type'))
     ) {
-      settings.role = directTextOnly(child);
+      globals.role = directTextOnly(child);
       continue;
     }
     if (isPromptlyEl(child, 'directive')) {
-      settings.thinkStepByStep = true;
+      globals.thinkStepByStep = true;
       continue;
     }
     if (isPromptlyEl(child, 'critique')) {
-      settings.selfCritique = true;
+      globals.selfCritique = true;
       continue;
     }
-    if (isSettingsEl(child)) continue;
+    if (isGlobalsEl(child)) continue;
     if (
       child.localName === 'directive' &&
       directTextOnly(child).trim().toLowerCase().startsWith('think step')
     ) {
-      settings.thinkStepByStep = true;
+      globals.thinkStepByStep = true;
       continue;
     }
     if (
       child.localName === 'critique' &&
       directTextOnly(child).trim().startsWith(SELF_CRITIQUE_TEXT.slice(0, 12))
     ) {
-      settings.selfCritique = true;
+      globals.selfCritique = true;
       continue;
     }
     const tag = parseTag(child, null, ctx);
@@ -279,5 +279,5 @@ export const importPromptlyXml = (xmlText: string): ImportResult => {
     childOrder: ctx.childOrder,
   };
 
-  return { tags: tagsState, settings };
+  return { tags: tagsState, globals };
 };

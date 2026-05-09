@@ -18,7 +18,7 @@ import { copyToClipboard } from '@/utils/clipboard';
 import { downloadText } from '@/utils/download';
 import { ImportButton } from '@/features/io/ImportButton';
 import { tagsActions } from '@/features/tags/tagsSlice';
-import { settingsActions } from '@/features/settings/settingsSlice';
+import { globalsActions } from '@/features/globals/globalsSlice';
 
 export interface PreviewActionsProps {
   xml: string;
@@ -28,9 +28,9 @@ export interface PreviewActionsProps {
 export const PreviewActions = ({ xml, disabled }: PreviewActionsProps) => {
   const dispatch = useAppDispatch();
   const tags = useAppSelector((s) => s.tags);
-  const settings = useAppSelector((s) => s.settings);
+  const globals = useAppSelector((s) => s.globals);
   const hasContent = useAppSelector(
-    (s) => Object.keys(s.tags.byUuid).length > 0 || s.settings.role.length > 0,
+    (s) => Object.keys(s.tags.byUuid).length > 0 || s.globals.role.length > 0,
   );
   const [snack, setSnack] = useState<string | null>(null);
   const [clearOpen, setClearOpen] = useState(false);
@@ -42,7 +42,7 @@ export const PreviewActions = ({ xml, disabled }: PreviewActionsProps) => {
   };
 
   const download = () => {
-    const promptly = renderPrompt({ tags, settings }, 'promptly');
+    const promptly = renderPrompt({ tags, globals }, 'promptly');
     const stamp = new Date().toISOString().replace(/[:.]/g, '-');
     downloadText(`promptly-${stamp}.xml`, 'application/xml', promptly);
     setSnack('Downloaded');
@@ -50,7 +50,7 @@ export const PreviewActions = ({ xml, disabled }: PreviewActionsProps) => {
 
   const confirmClear = () => {
     dispatch(tagsActions.clearAll());
-    dispatch(settingsActions.reset());
+    dispatch(globalsActions.reset());
     setClearOpen(false);
     setSnack('Cleared');
   };
@@ -117,7 +117,7 @@ export const PreviewActions = ({ xml, disabled }: PreviewActionsProps) => {
         <DialogTitle>Clear prompt?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This removes all tags and resets settings. This cannot be undone — download or
+            This removes all tags and resets globals. This cannot be undone — download or
             keep a copy first if you want to keep your work.
           </DialogContentText>
         </DialogContent>

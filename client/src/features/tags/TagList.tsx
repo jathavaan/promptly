@@ -32,7 +32,7 @@ export const TagList = ({ parentUuid }: TagListProps) => {
     parentUuid === null ? s.tags.rootOrder : (s.tags.childOrder[parentUuid] ?? []),
   );
   const byUuid = useAppSelector((s) => s.tags.byUuid);
-  const showStatic = useAppSelector((s) => s.settings.showStaticInBuilder);
+  const showStatic = useAppSelector((s) => s.globals.showStaticInBuilder);
   const order = showStatic ? rawOrder : rawOrder.filter((u) => !byUuid[u]?.static);
   const validation = useTagValidation();
   const [groupTarget, setGroupTarget] = useState<string | null>(null);

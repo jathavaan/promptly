@@ -19,7 +19,7 @@ import { Button } from '@/components/Button/Button';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { libraryActions } from './librarySlice';
 import { tagsActions } from '@/features/tags/tagsSlice';
-import { settingsActions } from '@/features/settings/settingsSlice';
+import { globalsActions } from '@/features/globals/globalsSlice';
 import type { LibraryKind, PromptlyFile, SavedItem } from './types';
 import type { Tag } from '@/features/tags/types';
 import { nanoid } from 'nanoid';
@@ -80,14 +80,14 @@ export const Library = ({ open, onClose }: LibraryProps) => {
   const dispatch = useAppDispatch();
   const items = useAppSelector((s) => s.library.items);
   const tags = useAppSelector((s) => s.tags);
-  const settings = useAppSelector((s) => s.settings);
+  const globals = useAppSelector((s) => s.globals);
 
   const [name, setName] = useState('');
   const [kind, setKind] = useState<LibraryKind>('prompt');
 
   const handleSave = () => {
     if (!name.trim()) return;
-    const payload: PromptlyFile = { version: 1, tags, settings };
+    const payload: PromptlyFile = { version: 1, tags, globals };
     dispatch(libraryActions.save({ name: name.trim(), kind, payload }));
     setName('');
   };
@@ -95,7 +95,7 @@ export const Library = ({ open, onClose }: LibraryProps) => {
   const handleLoad = (item: SavedItem) => {
     const fresh = cloneWithFreshUuids(item.payload);
     dispatch(tagsActions.replaceAll(fresh.tags));
-    dispatch(settingsActions.replaceAll(fresh.settings));
+    dispatch(globalsActions.replaceAll(fresh.globals));
     onClose();
   };
 

@@ -1,4 +1,4 @@
-import type { SettingsState } from '@/features/settings/settingsSlice';
+import type { GlobalsState } from '@/features/globals/globalsSlice';
 import type { Tag, TagsState } from '@/features/tags/types';
 import { REF_REGEX } from '@/features/tags/types';
 import { cdata, xmlEscapeAttr } from '@/utils/xmlEscape';
@@ -12,7 +12,7 @@ const SELF_CRITIQUE_TEXT =
 
 interface RenderInput {
   tags: TagsState;
-  settings: SettingsState;
+  globals: GlobalsState;
 }
 
 // Refs resolve to the literal `<id>` label of the target tag (not its value).
@@ -167,7 +167,7 @@ const renderTag = (
 };
 
 export const renderPrompt = (input: RenderInput, mode: RenderMode): string => {
-  const { tags, settings } = input;
+  const { tags, globals } = input;
   const ordered = tags.rootOrder
     .map((u) => tags.byUuid[u])
     .filter((t): t is Tag => Boolean(t) && !t.disabled);
@@ -180,9 +180,9 @@ export const renderPrompt = (input: RenderInput, mode: RenderMode): string => {
   lines.push('<?xml version="1.0" encoding="UTF-8"?>');
   lines.push(`<prompt${ns}>`);
 
-  if (settings.role.trim()) {
+  if (globals.role.trim()) {
     const tag = mode === 'promptly' ? 'p:role' : 'role';
-    const raw = settings.role.trim();
+    const raw = globals.role.trim();
     const content = wrapTextContent(raw, mode);
     const childPad = INDENT + INDENT;
     lines.push(`${INDENT}<${tag}>\n${indentLines(content, childPad)}\n${INDENT}</${tag}>`);
@@ -195,11 +195,11 @@ export const renderPrompt = (input: RenderInput, mode: RenderMode): string => {
     lines.push(renderTag(t, tags, mode, 1));
   }
 
-  if (settings.thinkStepByStep) {
+  if (globals.thinkStepByStep) {
     const tag = mode === 'promptly' ? 'p:directive' : 'directive';
     lines.push(`${INDENT}<${tag}>Think step by step.</${tag}>`);
   }
-  if (settings.selfCritique) {
+  if (globals.selfCritique) {
     const tag = mode === 'promptly' ? 'p:critique' : 'critique';
     lines.push(`${INDENT}<${tag}>${SELF_CRITIQUE_TEXT}</${tag}>`);
   }

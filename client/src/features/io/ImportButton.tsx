@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import { Button } from '@/components/Button/Button';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { tagsActions } from '@/features/tags/tagsSlice';
-import { settingsActions } from '@/features/settings/settingsSlice';
+import { globalsActions } from '@/features/globals/globalsSlice';
 import { importPromptlyXml, ImportError } from './importXml';
 import { readFileAsText } from '@/utils/fileRead';
 import type { ImportResult } from './importXml';
@@ -22,12 +22,12 @@ export const ImportButton = ({ renderTrigger, onResult }: ImportButtonProps) => 
   const [staged, setStaged] = useState<ImportResult | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const hasContent = useAppSelector(
-    (s) => Object.keys(s.tags.byUuid).length > 0 || s.settings.role.length > 0,
+    (s) => Object.keys(s.tags.byUuid).length > 0 || s.globals.role.length > 0,
   );
 
   const applyParsed = (parsed: ImportResult) => {
     dispatch(tagsActions.replaceAll(parsed.tags));
-    dispatch(settingsActions.replaceAll(parsed.settings));
+    dispatch(globalsActions.replaceAll(parsed.globals));
     onResult?.('Imported');
   };
 
@@ -77,7 +77,7 @@ export const ImportButton = ({ renderTrigger, onResult }: ImportButtonProps) => 
         <DialogTitle>Replace current prompt?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Importing this file will replace the tags and settings you currently have. This
+            Importing this file will replace the tags and globals you currently have. This
             cannot be undone — save your current work first if you want to keep it.
           </DialogContentText>
         </DialogContent>

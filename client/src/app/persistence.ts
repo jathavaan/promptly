@@ -1,8 +1,8 @@
 import type { Middleware } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 import type { ListItem, Tag, TagsState } from '@/features/tags/types';
-import type { SettingsState } from '@/features/settings/settingsSlice';
-import type { LibraryState } from '@/features/library/types';
+import type { GlobalsState } from '@/features/globals/globalsSlice';
+import type { LibraryState, SavedItem } from '@/features/library/types';
 
 const KEY_DRAFT = 'promptly:draft';
 const KEY_LIBRARY = 'promptly:library';
@@ -11,18 +11,18 @@ const DEBOUNCE_MS = 300;
 
 interface DraftSnapshot {
   tags: TagsState;
-  settings: SettingsState;
+  globals: GlobalsState;
 }
 
 interface PersistedShape {
   tags: TagsState;
-  settings: SettingsState;
+  globals: GlobalsState;
   library: LibraryState;
 }
 
 const SKIP_ACTION_TYPES = new Set([
   'tags/replaceAll',
-  'settings/replaceAll',
+  'globals/replaceAll',
   'library/replaceAll',
 ]);
 
@@ -105,17 +105,22 @@ export const loadDraft = (): DraftSnapshot | null => {
   try {
     const raw = localStorage.getItem(KEY_DRAFT);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as { tags?: Record<string, unknown>; settings?: SettingsState };
+    const parsed = JSON.parse(raw) as {
+      tags?: Record<string, unknown>;
+      globals?: GlobalsState;
+      settings?: GlobalsState;
+    };
+    const globalsRaw = parsed.globals ?? parsed.settings;
     return {
       tags: parsed.tags ? migrateTagsState(parsed.tags) : { byUuid: {}, rootOrder: [], childOrder: {} },
-      settings: {
+      globals: {
         role: '',
         thinkStepByStep: false,
         selfCritique: false,
         copyMode: 'raw',
         showStaticInBuilder: false,
-        ...(parsed.settings ?? {}),
-      } as SettingsState,
+        ...(globalsRaw ?? {}),
+      } as GlobalsState,
     };
   } catch {
     return null;
@@ -128,13 +133,19 @@ export const loadLibrary = (): LibraryState | null => {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as LibraryState;
     if (!parsed?.items) return parsed;
-    parsed.items = parsed.items.map((item) => ({
-      ...item,
-      payload: {
-        ...item.payload,
-        tags: migrateTagsState(item.payload.tags as unknown as Record<string, unknown>),
-      },
-    }));
+    parsed.items = parsed.items.map((item) => {
+      const legacy = item.payload as unknown as { settings?: GlobalsState; globals?: GlobalsState };
+      const globals = item.payload.globals ?? legacy.settings;
+      const next: SavedItem = {
+        ...item,
+        payload: {
+          ...item.payload,
+          tags: migrateTagsState(item.payload.tags as unknown as Record<string, unknown>),
+          globals: globals as GlobalsState,
+        },
+      };
+      return next;
+    });
     return parsed;
   } catch {
     return null;
@@ -149,12 +160,12 @@ export const persistenceMiddleware: Middleware<object, PersistedShape> = (store)
   const type = (action as { type?: string }).type ?? '';
   if (SKIP_ACTION_TYPES.has(type)) return result;
 
-  if (type.startsWith('tags/') || type.startsWith('settings/')) {
+  if (type.startsWith('tags/') || type.startsWith('globals/')) {
     if (draftTimer) clearTimeout(draftTimer);
     draftTimer = setTimeout(() => {
       try {
         const state = store.getState();
-        const snapshot: DraftSnapshot = { tags: state.tags, settings: state.settings };
+        const snapshot: DraftSnapshot = { tags: state.tags, globals: state.globals };
         localStorage.setItem(KEY_DRAFT, JSON.stringify(snapshot));
       } catch {
         /* ignore quota errors */
