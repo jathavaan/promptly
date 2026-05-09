@@ -21,6 +21,7 @@ Hand-writing `<role>...</role>` and `<context>...</context>` blocks for Claude o
 ## Table of contents
 
 - [Quickstart](#quickstart)
+- [Cookbook (worked examples)](#cookbook-worked-examples)
 - [Concepts](#concepts)
   - [Tags](#tags)
   - [Input types](#input-types)
@@ -51,6 +52,10 @@ Hand-writing `<role>...</role>` and `<context>...</context>` blocks for Claude o
 3. In any text field, type `<` to open the autocomplete and reference another tag's ID — the rendered prompt expands `<other-tag>` literally where you typed it.
 4. Open the **Preview** panel to see the rendered XML; click **Copy** to put it on the clipboard.
 5. Open the **Library** to save the current prompt or save it as a template (preserves field text for reuse).
+
+## Cookbook (worked examples)
+
+For end-to-end examples that map Builder state to rendered output — few-shot prompts, structured-output schemas, references, templates, XML round-trip, A/B testing — see **[docs/EXAMPLES.md](./docs/EXAMPLES.md)**.
 
 ## Concepts
 
