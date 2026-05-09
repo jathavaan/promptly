@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Chip from '@mui/material/Chip';
+import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -147,6 +148,11 @@ export const Library = ({ open, onClose }: LibraryProps) => {
           >
             Save current state
           </Button>
+          <Alert severity="warning" variant="outlined" sx={{ py: 0.25 }}>
+            Saved items live only in this browser&apos;s local storage — clearing
+            site data, using a different browser, or switching device will erase
+            them. Export anything you want to keep to a file.
+          </Alert>
         </Stack>
         <Divider sx={{ my: 2 }} />
         <Typography variant="caption" color="text.secondary">
