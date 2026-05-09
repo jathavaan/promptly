@@ -41,6 +41,8 @@ promptly bakes this practice into the editor: every field is a tag, every tag ha
   - [Flags: pinned, disabled, static](#flags-pinned-disabled-static)
 - [Validation rules](#validation-rules)
   - [Tag ID rules](#tag-id-rules)
+    - [Reserved IDs (collide with Settings)](#reserved-ids-collide-with-settings)
+    - [Auto-suffixed IDs](#auto-suffixed-ids)
   - [Errors vs warnings](#errors-vs-warnings)
   - [Reference resolution](#reference-resolution)
   - [Empty values](#empty-values)
@@ -74,7 +76,7 @@ For end-to-end examples that map Builder state to rendered output — few-shot p
 
 A **tag** is one named field that becomes one XML element in the output. Each tag has:
 
-- A unique **id** (the XML element name, e.g. `context`).
+- An **id** (the XML element name, e.g. `context`) that is **globally unique across the whole prompt**, including inside groups at any nesting depth — see [Tag ID rules](#tag-id-rules).
 - A **type** (`text`, `checkbox`, `list`, `example`, or `group`).
 - A **value** matching the type.
 - Optional **flags**: `pinned`, `disabled`, `static`, plus free-form `notes`.
@@ -113,7 +115,7 @@ A `group` tag has no value of its own — it just nests other tags. Groups can n
 ### Flags: pinned, disabled, static
 
 - **pinned** — tag renders at the **end** of the prompt body, after non-pinned tags. Useful for closing instructions like a "respond in JSON" block.
-- **disabled** — tag is excluded from the rendered prompt entirely. References to a disabled tag render empty.
+- **disabled** — tag is excluded from the rendered prompt entirely. References to a disabled tag render empty. Disabling a `group` hides its entire subtree from the output (children are not promoted to the parent).
 - **static** — tag is hidden from the Builder list by default (toggle visibility with the lock icon in the Tags panel header, or in Settings → "Show static in builder"). Static tags still render normally and are preserved by templates. Use for boilerplate you rarely edit.
 
 ## Validation rules
@@ -130,8 +132,9 @@ Tag IDs must be valid XML element names (a safe ASCII subset):
 
 - Must start with a letter or underscore.
 - May contain letters, digits, `.`, `-`, `_`.
+- Are case-sensitive in the rendered XML (`Foo` and `foo` are two different elements).
 - May **not** start with `xml` (case-insensitive — reserved by the XML spec).
-- Must be unique across all tags in the prompt.
+- Must be **globally unique across the entire prompt** — including inside groups, at any nesting depth. Duplicates in a nested group still count as duplicates with a tag at the root.
 
 | Condition | Message |
 | --------- | ------- |
@@ -139,9 +142,28 @@ Tag IDs must be valid XML element names (a safe ASCII subset):
 | Starts with digit / symbol | `ID must start with a letter or underscore.` |
 | Starts with `xml` / `XML` / `Xml` … | `ID cannot start with "xml" (reserved).` |
 | Contains other characters | `ID may only contain letters, digits, ".", "-", "_".` |
-| Two tags share the same valid ID | `Duplicate ID "{id}".` |
+| Two tags share the same valid ID (anywhere in the tree) | `Duplicate ID "{id}".` |
 
-For `list` tags with `listStyle: xml`, the **child element name** (`listChildName`) must satisfy the same rule, otherwise: `List child element name is not a valid XML name.`
+For `list` tags with `listStyle: xml`, the **child element name** (`listChildName`) must satisfy the same XML-name rule, otherwise: `List child element name is not a valid XML name.`
+
+#### Reserved IDs (collide with Settings)
+
+The Settings panel emits three fixed elements at top level: `<role>`, `<directive>` (for *Think step by step*), and `<critique>` (for *Self-critique*). You can technically create a tag with one of these IDs — the validator will not block it — but you should avoid them:
+
+- In **clean** render mode, the output will contain two same-named elements when the corresponding setting is enabled.
+- On **XML import**, top-level elements named `role`, `directive`, or `critique` without a `p:type` attribute are interpreted as Settings, not as tags, and will not round-trip back into a tag.
+
+If you need a "role"-shaped tag, use the Settings → role field, or pick a different ID like `assistant_role` / `persona`.
+
+#### Auto-suffixed IDs
+
+The Builder auto-resolves ID conflicts in two cases:
+
+- **Add preset tag** — if a preset's default ID already exists, the new tag gets a numeric suffix (`task` → `task2` → `task3` …).
+- **Duplicate tag** — same suffixing on the duplicated tag.
+- **Drop a tag onto a non-group tag** — the Builder wraps both in a new group whose ID defaults to `group`, also auto-suffixed.
+
+Manually editing an ID does **not** auto-suffix; you'll just see the duplicate error until you fix one of them.
 
 ### Errors vs warnings
 
@@ -222,7 +244,15 @@ Failures throw `ImportError` with a short message: `Could not parse file as XML.
 
 ## Storage and privacy
 
-Everything lives in `localStorage` under the `promptly:` prefix (`promptly:tags`, `promptly:settings`, `promptly:library`, `promptly:tutorial`). No backend, no telemetry, no network calls beyond loading the static site itself.
+Everything lives in `localStorage` under the `promptly:` prefix:
+
+| Key | Holds |
+| --- | ----- |
+| `promptly:draft` | Current Builder state — `{ tags, settings }`. Auto-saved on edit (debounced 300 ms). |
+| `promptly:library` | Saved prompts and templates (the Library tab). |
+| `promptly:tutorial-seen` | Flag for the first-visit walkthrough. |
+
+No backend, no telemetry, no network calls beyond loading the static site itself. The persistence layer is forward-compatible: older tag shapes from earlier versions are migrated on load (missing fields filled with defaults), so you should not lose work across upgrades.
 
 Clearing site data wipes all prompts and library entries — export anything you want to keep first.
 

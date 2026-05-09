@@ -4,6 +4,15 @@ Worked examples showing how Builder state turns into the prompt you copy.
 
 All snippets below are shown in **clean** render mode — what the **Copy** button puts on your clipboard. The same prompt exported via **Export XML** wraps every element with a `urn:promptly` namespace and `p:*` attributes (`p:type`, `p:pinned`, `p:listStyle`, …) so it round-trips losslessly through **Import XML**. See the [Output](../README.md#output) and [XML import / export](../README.md#xml-import--export) sections of the README for the metadata format.
 
+### Rules these examples follow
+
+Every example honours the validation rules from the [README](../README.md#validation-rules):
+
+- All tag IDs are **globally unique** — no two tags share an ID, including across group boundaries.
+- IDs match `^[A-Za-z_][A-Za-z0-9._-]*$` and don't start with `xml`.
+- IDs `role`, `directive`, and `critique` are reserved for Settings and never used as tag IDs (the cookbook uses `persona` or similar where a "system role" tag is needed).
+- For `list` tags with `listStyle: xml`, `listChildName` is itself a valid XML name.
+
 ## Table of contents
 
 1. [Minimal coding prompt](#1-minimal-coding-prompt)
@@ -221,9 +230,11 @@ Body order: non-pinned tags (Builder order) → pinned tags → directive → cr
 
 ## 8. Templates and static fields
 
-Scenario: you've built a polished prompt for "summarise a meeting transcript." The role, schema, and tone rarely change; the transcript changes every time. Make the boilerplate disappear from the Builder so only the variable parts are visible.
+Scenario: you've built a polished prompt for "summarise a meeting transcript." The persona, schema, and tone rarely change; the transcript changes every time. Make the boilerplate disappear from the Builder so only the variable parts are visible.
 
-1. On `role`, `schema`, `tone`, click the lock icon to mark them **static**. They drop out of the Builder list.
+> Note: the **Settings → role** field is not a tag and cannot be marked static (it has its own input above the tag list). For static persona / system instructions, create a regular `text` tag with a non-reserved id like `persona` or `assistant_role`. See [Reserved IDs](../README.md#reserved-ids-collide-with-settings) for why `role`, `directive`, and `critique` should not be used as tag ids.
+
+1. On `persona`, `schema`, `tone`, click the lock icon to mark them **static**. They drop out of the Builder list.
 2. Open the **Library**, click **Save as template**.
 3. Next session: open the template. Static fields are preserved with their text, so you only fill in `transcript`.
 4. Need to edit the boilerplate? Settings → toggle **Show static in builder** to bring them back.
