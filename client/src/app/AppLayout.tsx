@@ -31,18 +31,12 @@ export const AppLayout = () => {
         <Toolbar variant="dense">
           <Box
             component="img"
-            src={`${import.meta.env.BASE_URL}favicon.svg`}
-            alt=""
-            aria-hidden="true"
-            sx={{ width: 24, height: 24, mr: 1, display: 'block' }}
-          />
-          <Typography
-            variant="h1"
-            sx={{ flexGrow: 1, fontSize: '1.125rem' }}
+            src={`${import.meta.env.BASE_URL}promptly-logo.svg`}
+            alt="promptly"
+            sx={{ height: 32, width: 'auto', display: 'block' }}
             data-tutorial="app-title"
-          >
-            promptly
-          </Typography>
+          />
+          <Box sx={{ flexGrow: 1 }} />
           {v.totalErrors + v.totalWarnings > 0 && (
             <Typography variant="caption" color={v.totalErrors > 0 ? 'error' : 'warning.main'} sx={{ mr: 2 }}>
               {v.totalErrors} error{v.totalErrors === 1 ? '' : 's'} · {v.totalWarnings} warning

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="client/public/favicon.svg" alt="promptly logo" width="96" height="96" />
+<img src="client/public/promptly-logo.svg" alt="promptly" width="320" />
 
 # promptly
 

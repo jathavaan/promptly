@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" role="img" aria-label="promptly">
+  <!-- Icon: original 32x32 mark scaled 2x, placed at (4,4) -->
+  <g transform="translate(4 4) scale(2)">
+    <rect width="32" height="32" rx="7" ry="7" fill="#6E56CF"/>
+    <g fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="7.6,11.6 4.6,16 7.6,20.4"/>
+      <polyline points="24.4,11.6 27.4,16 24.4,20.4"/>
+    </g>
+    <g fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4">
+      <line x1="13.0" y1="10.4" x2="13.0" y2="24.6"/>
+      <circle cx="16.2" cy="14.2" r="3.1"/>
+    </g>
+  </g>
+
+  <!-- Wordmark "promptly" — drawn in the same monoline style as the icon's 'p'.
+       Metrics: x-height top y=24, baseline y=50 (x-height=26),
+                ascender top y=14, descender bottom y=64, stroke 4.5 -->
+  <g fill="none" stroke="#6E56CF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- p : stem + circle bowl, identical construction to the icon -->
+    <line x1="84" y1="24" x2="84" y2="64"/>
+    <circle cx="97" cy="37" r="13"/>
+
+    <!-- r : stem rising to x-height, then ear curving right and down.
+            Control at the same y as x-height keeps the curve at-or-below
+            the x-height line — never rising above adjacent letters.
+            The 90° join is softened by stroke-linejoin="round". -->
+    <path d="M117 50 L117 24 Q 124 24 130 28"/>
+
+    <!-- o : full circle on the x-height -->
+    <circle cx="148" cy="37" r="13"/>
+
+    <!-- m : two arched humps. Stems at 168 / 184 / 200, half-circle shoulders -->
+    <path d="M168 50 L168 32 A8 8 0 0 1 184 32 L184 50"/>
+    <path d="M184 32 A8 8 0 0 1 200 32 L200 50"/>
+
+    <!-- p : same as the first p -->
+    <line x1="207" y1="24" x2="207" y2="64"/>
+    <circle cx="220" cy="37" r="13"/>
+
+    <!-- t : stem rising slightly above x-height, crossbar at x-height -->
+    <line x1="246" y1="18" x2="246" y2="50"/>
+    <line x1="240" y1="24" x2="252" y2="24"/>
+
+    <!-- l : single tall stem, ascender to baseline -->
+    <line x1="259" y1="14" x2="259" y2="50"/>
+
+    <!-- y : crossed diagonals. Right arm continues past the meeting point
+            into the descender, tail at (271, 64) -->
+    <line x1="266" y1="24" x2="277" y2="50"/>
+    <line x1="288" y1="24" x2="271" y2="64"/>
+  </g>
+</svg>
