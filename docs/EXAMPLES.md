@@ -12,11 +12,12 @@ Every example honours the validation rules from the [README](../README.md#valida
 - IDs match `^[A-Za-z_][A-Za-z0-9._-]*$` and don't start with `xml`.
 - IDs `role`, `directive`, and `critique` are reserved for Settings and never used as tag IDs (the cookbook uses `persona` or similar where a "system role" tag is needed).
 - For `list` tags with `listStyle: xml`, `listChildName` is itself a valid XML name.
+- **Every element name in the rendered output is unique.** This is what makes references unambiguous — see [Element-name uniqueness](../README.md#element-name-uniqueness-in-the-rendered-output). The cookbook avoids the `example` input type for this reason; few-shot blocks use a single `list` tag instead.
 
 ## Table of contents
 
 1. [Minimal coding prompt](#1-minimal-coding-prompt)
-2. [Few-shot with `example` tags](#2-few-shot-with-example-tags)
+2. [Few-shot examples as an ordered list](#2-few-shot-examples-as-an-ordered-list)
 3. [Structured output schema with `xml`-style lists](#3-structured-output-schema-with-xml-style-lists)
 4. [References to keep prompts DRY](#4-references-to-keep-prompts-dry)
 5. [Checkboxes for feature flags](#5-checkboxes-for-feature-flags)
@@ -57,20 +58,17 @@ The bread-and-butter case: a role, some context, a task. All `text` tags.
 </prompt>
 ```
 
-## 2. Few-shot with `example` tags
+## 2. Few-shot examples as an ordered list
 
-The `example` type is a repeatable `{ input, output }` pair, so each row becomes an `<example>` element with `<input>` and `<output>` children.
+> **Why not the `example` input type?** That type renders one `<example>` block per pair, each with its own `<input>` and `<output>` — so three pairs produce three `<example>`, three `<input>`, and three `<output>` sibling elements. promptly's reference system expands every reference to a literal `<element-name>` token, so duplicated names are ambiguous and the `example` type is **not safe whenever the prompt also uses references**. See [Element-name uniqueness](../README.md#element-name-uniqueness-in-the-rendered-output) for the rule. The pattern below — a single `examples` tag with an ordered list — keeps every element name unique.
 
 **Builder:**
 
 - `task` (text) — `Classify each sentence as positive, neutral, or negative.`
-- `examples` (example) — three rows:
-
-  | input | output |
-  | ----- | ------ |
-  | `I love this.` | `positive` |
-  | `It is fine.` | `neutral` |
-  | `This is the worst.` | `negative` |
+- `examples` (list, style `ordered`) — three items:
+  - `"I love this." → positive`
+  - `"It is fine." → neutral`
+  - `"This is the worst." → negative`
 
 **Rendered:**
 
@@ -80,33 +78,27 @@ The `example` type is a repeatable `{ input, output }` pair, so each row becomes
 		Classify each sentence as positive, neutral, or negative.
 	</task>
 	<examples>
-		<example>
-			<input>
-				I love this.
-			</input>
-			<output>
-				positive
-			</output>
-		</example>
-		<example>
-			<input>
-				It is fine.
-			</input>
-			<output>
-				neutral
-			</output>
-		</example>
-		<example>
-			<input>
-				This is the worst.
-			</input>
-			<output>
-				negative
-			</output>
-		</example>
+		1. "I love this." → positive
+		2. "It is fine." → neutral
+		3. "This is the worst." → negative
 	</examples>
 </prompt>
 ```
+
+If you need each example as its own structured block (e.g. with separate `<input>` / `<output>` you can reference), give every block its own unique IDs, for example:
+
+```xml
+	<example_1>
+		<input_1>I love this.</input_1>
+		<output_1>positive</output_1>
+	</example_1>
+	<example_2>
+		<input_2>It is fine.</input_2>
+		<output_2>neutral</output_2>
+	</example_2>
+```
+
+Awkward but unambiguous. In practice the ordered-list form above is what most prompts want.
 
 ## 3. Structured output schema with `xml`-style lists
 
@@ -284,7 +276,7 @@ This means you can paste an LLM prompt you wrote by hand into a file, hit **Impo
 To compare a prompt with and without a few-shot block, toggle the **disabled** flag on the `examples` tag instead of deleting it. Disabled tags are excluded from the rendered output, and any `<examples>` reference elsewhere renders empty — but the data stays in the Builder so you can flip it back.
 
 ```
-examples.disabled = false  →  <examples><example>…</example>…</examples>  in output
+examples.disabled = false  →  <examples>1. … 2. … 3. …</examples>  in output
 examples.disabled = true   →  tag and any references to it both disappear
 ```
 

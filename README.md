@@ -43,6 +43,7 @@ promptly bakes this practice into the editor: every field is a tag, every tag ha
   - [Tag ID rules](#tag-id-rules)
     - [Reserved IDs (collide with Settings)](#reserved-ids-collide-with-settings)
     - [Auto-suffixed IDs](#auto-suffixed-ids)
+    - [Element-name uniqueness in the rendered output](#element-name-uniqueness-in-the-rendered-output)
   - [Errors vs warnings](#errors-vs-warnings)
   - [Reference resolution](#reference-resolution)
   - [Empty values](#empty-values)
@@ -88,7 +89,7 @@ A **tag** is one named field that becomes one XML element in the output. Each ta
 | `text` | Multiline text area with `<` autocomplete for references | `<id>...text...</id>` |
 | `checkbox` | Toggle switch | `<id>true</id>` or `<id>false</id>` |
 | `list` | Repeatable rows; pick a list style (see below) | `<id>` containing items in the chosen style |
-| `example` | Repeatable `{ input, output }` pairs | `<id><example><input>…</input><output>…</output></example>…</id>` |
+| `example` | Repeatable `{ input, output }` pairs | `<id><example><input>…</input><output>…</output></example>…</id>` ⚠️ produces repeated child element names — see [Element-name uniqueness](#element-name-uniqueness-in-the-rendered-output) |
 | `group` | Container; drag other tags inside | `<id>` containing nested tag elements |
 
 **List styles** (`listStyle`):
@@ -164,6 +165,17 @@ The Builder auto-resolves ID conflicts in two cases:
 - **Drop a tag onto a non-group tag** — the Builder wraps both in a new group whose ID defaults to `group`, also auto-suffixed.
 
 Manually editing an ID does **not** auto-suffix; you'll just see the duplicate error until you fix one of them.
+
+#### Element-name uniqueness in the rendered output
+
+Tag IDs map directly to XML element names in the rendered prompt. Because **references** expand to a literal `<target-id>` token, every element name in the output should appear at most once — otherwise a `<foo>` reference in another field is ambiguous (the LLM cannot tell which `<foo>` you meant).
+
+The validator enforces this for Tag IDs (see [Tag ID rules](#tag-id-rules)). It does **not** catch element-name duplication produced by certain input types, which is currently the user's responsibility:
+
+- The **`example` input type** emits one `<example>` block per pair, each containing a `<input>` and an `<output>`. Three example pairs produce three `<example>` siblings, three `<input>` siblings, and three `<output>` siblings inside the parent — none of these can be referenced unambiguously, and they collide with any `text`/`group`/`list` tag elsewhere in the prompt that happens to share the name `example`, `input`, or `output`. Avoid this type whenever the prompt uses references to its content; prefer one Tag per example, or a `list` tag (see the [cookbook](./docs/EXAMPLES.md#2-few-shot-examples-as-an-ordered-list)).
+- The **`xml`-style list** also emits siblings with the same element name (`listChildName`). It disambiguates them with an auto-generated `id="N"` attribute, so it is referenceable as a sequence (the parent `<schema>` is the unique anchor, individual items are addressed by index in prose). Treat the children as **not individually referenceable** — refer to the parent.
+
+**Rule of thumb:** if you want a section to be referenceable from elsewhere, give every meaningful element its own unique Tag ID. Use repeating-children types (`example`, `xml`-style list) only inside a section whose children you do not need to reference by name.
 
 ### Errors vs warnings
 
