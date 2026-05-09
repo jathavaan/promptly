@@ -8,10 +8,9 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import Divider from '@mui/material/Divider';
 import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import { Footer } from '@/components/Footer/Footer';
 import { Tags } from '@/features/tags/Tags';
 import { Globals } from '@/features/globals/Globals';
 import { Preview } from '@/features/preview/Preview';
@@ -61,17 +60,6 @@ export const AppLayout = () => {
               <BookmarksOutlinedIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="GitHub">
-            <IconButton
-              component="a"
-              href="https://github.com/jathavaan/promptly"
-              target="_blank"
-              rel="noopener"
-              aria-label="GitHub"
-            >
-              <GitHubIcon />
-            </IconButton>
-          </Tooltip>
         </Toolbar>
       </AppBar>
       <Container maxWidth="xl" sx={{ py: 3, flexGrow: 1 }}>
@@ -113,12 +101,7 @@ export const AppLayout = () => {
           </Paper>
         </Box>
       </Container>
-      <Divider />
-      <Box sx={{ py: 1.5, textAlign: 'center' }}>
-        <Typography variant="caption" color="text.secondary">
-          promptly · build prompts wrapped in HTML tags
-        </Typography>
-      </Box>
+      <Footer />
       <Library open={libraryOpen} onClose={() => setLibraryOpen(false)} />
       <Tutorial />
     </Box>
