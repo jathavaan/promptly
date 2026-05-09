@@ -1,0 +1,63 @@
+name: Documentation
+description: Report missing, unclear, or incorrect documentation
+title: "[Docs]: "
+labels: ["documentation", "needs-triage"]
+assignees: ["jathavaan"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the docs. Point to the exact place that needs work.
+
+  - type: checkboxes
+    id: prereqs
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I searched existing issues and did not find a duplicate.
+          required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: File path, URL, or section. e.g. `README.md` › Getting Started, or `client/CLAUDE.md`.
+      placeholder: README.md › Installation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of issue
+      options:
+        - Missing — something should be documented but isn't
+        - Incorrect — what is documented is wrong or outdated
+        - Unclear — wording or structure is confusing
+        - Typo / formatting
+        - Broken link or reference
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong
+      description: Quote the exact text if applicable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+      description: A proposed wording or structure. Optional but speeds things up.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+    validations:
+      required: false
