@@ -85,10 +85,14 @@ export const Library = ({ open, onClose }: LibraryProps) => {
   const [name, setName] = useState('');
   const [kind, setKind] = useState<LibraryKind>('prompt');
 
+  const trimmed = name.trim();
+  const nameTaken =
+    trimmed.length > 0 && items.some((i) => i.kind === kind && i.name === trimmed);
+
   const handleSave = () => {
-    if (!name.trim()) return;
+    if (!trimmed || nameTaken) return;
     const payload: PromptlyFile = { version: 1, tags, globals };
-    dispatch(libraryActions.save({ name: name.trim(), kind, payload }));
+    dispatch(libraryActions.save({ name: trimmed, kind, payload }));
     setName('');
   };
 
@@ -122,6 +126,8 @@ export const Library = ({ open, onClose }: LibraryProps) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Paragraph rewrite — formal"
+            error={nameTaken}
+            helperText={nameTaken ? `A ${kind} with this name already exists` : ' '}
           />
           <ToggleButtonGroup
             size="small"
@@ -137,7 +143,7 @@ export const Library = ({ open, onClose }: LibraryProps) => {
             variant="contained"
             startIcon={<SaveOutlinedIcon />}
             onClick={handleSave}
-            disabled={!name.trim()}
+            disabled={!trimmed || nameTaken}
           >
             Save current state
           </Button>
